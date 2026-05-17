@@ -13,6 +13,9 @@ const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const auth_module_1 = require("./auth/auth.module");
 const users_module_1 = require("./users/users.module");
+const properties_module_1 = require("./properties/properties.module");
+const reservations_module_1 = require("./reservations/reservations.module");
+const reviews_module_1 = require("./reviews/reviews.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -22,6 +25,9 @@ exports.AppModule = AppModule = __decorate([
             mongoose_1.MongooseModule.forRoot(process.env.MONGO_URI || 'mongodb://localhost:27017/airbemi'),
             auth_module_1.AuthModule,
             users_module_1.UsersModule,
+            properties_module_1.PropertiesModule,
+            reservations_module_1.ReservationsModule,
+            reviews_module_1.ReviewsModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
