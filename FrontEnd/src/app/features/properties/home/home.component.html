@@ -37,7 +37,7 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
   <!-- Skeleton loader -->
-  <div *ngIf="isLoading" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+  <div *ngIf="isLoading()" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
     <div *ngFor="let _ of [1,2,3,4,5,6,7,8]" class="animate-pulse">
       <div class="bg-gray-200 rounded-2xl aspect-square mb-3"></div>
       <div class="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
@@ -46,18 +46,18 @@
     </div>
   </div>
 
-  <!-- État vide (filtre sans résultats) -->
-  <div *ngIf="!isLoading && properties.length === 0" class="flex flex-col items-center justify-center py-24 text-center">
+  <!-- État vide -->
+  <div *ngIf="!isLoading() && properties.length === 0" class="flex flex-col items-center justify-center py-24 text-center">
     <span class="text-6xl mb-4">🔍</span>
     <h3 class="text-xl font-bold text-gray-800 mb-2">Aucun logement pour cette catégorie</h3>
     <p class="text-gray-500 max-w-sm mb-6">Essayez une autre catégorie ou revenez à la liste complète.</p>
-    <button (click)="setCategory(null!)" class="bg-brand text-white px-6 py-2 rounded-full text-sm font-semibold hover:bg-rose-600 transition">
+    <button (click)="setCategory(null)" class="bg-brand text-white px-6 py-2 rounded-full text-sm font-semibold hover:bg-rose-600 transition">
       Voir tous les logements
     </button>
   </div>
 
   <!-- Grille de logements -->
-  <div *ngIf="!isLoading && properties.length > 0"
+  <div *ngIf="!isLoading() && properties.length > 0"
     class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-10">
 
     <div *ngFor="let property of properties"
