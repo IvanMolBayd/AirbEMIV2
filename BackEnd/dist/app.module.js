@@ -17,6 +17,8 @@ const users_module_1 = require("./users/users.module");
 const properties_module_1 = require("./properties/properties.module");
 const reservations_module_1 = require("./reservations/reservations.module");
 const reviews_module_1 = require("./reviews/reviews.module");
+const chatbot_module_1 = require("./chatbot/chatbot.module");
+const upload_module_1 = require("./upload/upload.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -30,6 +32,8 @@ exports.AppModule = AppModule = __decorate([
             properties_module_1.PropertiesModule,
             reservations_module_1.ReservationsModule,
             reviews_module_1.ReviewsModule,
+            chatbot_module_1.ChatbotModule,
+            upload_module_1.UploadModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

@@ -27,7 +27,13 @@ export class AuthService {
 
   // Connexion (classique et google) qui retourne le JWT
   async login(user: any) {
-    const payload = { email: user.email, sub: user._id, role: user.role };
+    const payload = { 
+      email: user.email, 
+      sub: user._id, 
+      role: user.role,
+      firstName: user.firstName,
+      lastName: user.lastName
+    };
     return {
       access_token: this.jwtService.sign(payload),
       user: {
@@ -69,6 +75,24 @@ export class AuthService {
     if (!req.user) {
       throw new UnauthorizedException('Aucun utilisateur provenant de Google');
     }
-    return this.login(req.user);
+
+    const { email, firstName, lastName, googleId } = req.user;
+    let user = await this.usersService.findByEmail(email);
+
+    if (!user) {
+      user = await this.usersService.create({
+        email,
+        firstName,
+        lastName,
+        googleId,
+        role: 'user',
+        isHost: false,
+      });
+    } else if (!user.googleId) {
+      user.googleId = googleId;
+      await user.save();
+    }
+
+    return this.login(user);
   }
 }

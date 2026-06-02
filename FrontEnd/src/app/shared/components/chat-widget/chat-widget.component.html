@@ -1,0 +1,94 @@
+<!-- Bulle flottante -->
+<button 
+  *ngIf="!isOpen()"
+  (click)="toggleChat()"
+  class="fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-tr from-brand to-rose-500 rounded-full shadow-2xl flex items-center justify-center hover:scale-105 transition-transform z-50 text-white"
+>
+  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+  </svg>
+</button>
+
+<!-- Fenêtre de Chat -->
+<div *ngIf="isOpen()" class="fixed bottom-6 right-6 w-80 sm:w-96 h-[500px] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden z-50 border border-gray-100 flex flex-col">
+  <!-- Header -->
+  <div class="bg-gradient-to-r from-brand to-rose-500 p-4 flex justify-between items-center text-white shrink-0">
+    <div class="flex items-center gap-2">
+      <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center font-bold">IA</div>
+      <div>
+        <h3 class="font-bold text-sm">Assistant AirBEMI</h3>
+        <p class="text-xs text-white/80">Gemini-powered</p>
+      </div>
+    </div>
+    <button (click)="toggleChat()" class="text-white hover:bg-white/20 p-1.5 rounded-full transition">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Messages -->
+  <div #scrollMe class="flex-1 p-4 overflow-y-auto bg-gray-50 flex flex-col gap-4">
+    <div *ngFor="let msg of messages()" class="flex flex-col max-w-[85%]" [ngClass]="msg.sender === 'user' ? 'self-end' : 'self-start'">
+      
+      <!-- Message Texte -->
+      <div 
+        class="px-4 py-2.5 rounded-2xl text-sm"
+        [ngClass]="msg.sender === 'user' ? 'bg-brand text-white rounded-br-none' : 'bg-white text-gray-800 shadow-sm border border-gray-100 rounded-bl-none'"
+      >
+        <p class="whitespace-pre-wrap leading-relaxed">{{ msg.content }}</p>
+      </div>
+
+      <!-- Mini-card Propriété (si renvoyée par l'IA) -->
+      <div *ngIf="msg.type === 'property' && msg.property" class="mt-2 bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden self-start w-64 cursor-pointer hover:shadow-lg transition-shadow">
+        <img [src]="msg.property.imageUrl || (msg.property.images && msg.property.images[0]) || 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=400&q=80'" class="w-full h-32 object-cover">
+        <div class="p-3">
+          <p class="font-bold text-gray-900 text-sm truncate">{{ msg.property.title }}</p>
+          <p class="text-xs text-gray-500 mb-2">{{ msg.property.address?.city }}</p>
+          <div class="flex justify-between items-center">
+            <span class="font-bold text-brand">{{ msg.property.pricePerNight }} DH</span>
+            <a [routerLink]="['/properties', msg.property._id]" class="text-xs bg-gray-900 text-white px-3 py-1.5 rounded-lg hover:bg-gray-800 transition">Voir</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Indicateur de frappe -->
+    <div *ngIf="isTyping()" class="self-start bg-white shadow-sm border border-gray-100 px-4 py-3 rounded-2xl rounded-bl-none flex items-center gap-1">
+      <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+      <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+      <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.4s"></div>
+    </div>
+  </div>
+
+  <!-- Suggestions / Boutons Rapides -->
+  <div *ngIf="messages().length < 3 && !isTyping()" class="px-4 py-2 bg-gray-50 shrink-0 overflow-x-auto flex gap-2 no-scrollbar">
+    <button *ngFor="let sug of suggestions" 
+            (click)="sendSuggestion(sug)"
+            class="whitespace-nowrap bg-white border border-brand text-brand hover:bg-brand hover:text-white px-3 py-1.5 rounded-full text-xs font-medium transition-colors">
+      {{ sug }}
+    </button>
+  </div>
+
+  <!-- Input -->
+  <div class="p-3 bg-white border-t border-gray-100 shrink-0">
+    <form (ngSubmit)="sendMessage()" class="flex gap-2">
+      <input 
+        type="text" 
+        [(ngModel)]="userInput" 
+        name="userInput"
+        placeholder="Posez votre question..." 
+        class="flex-1 px-4 py-2 bg-gray-100 text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-brand focus:bg-white transition"
+      >
+      <button 
+        type="submit" 
+        [disabled]="!userInput.trim() || isTyping()"
+        class="w-10 h-10 bg-brand text-white rounded-full flex items-center justify-center shrink-0 disabled:opacity-50 hover:bg-rose-600 transition"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+        </svg>
+      </button>
+    </form>
+  </div>
+</div>

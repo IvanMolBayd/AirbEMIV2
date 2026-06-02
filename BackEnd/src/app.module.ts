@@ -8,6 +8,8 @@ import { UsersModule } from './users/users.module';
 import { PropertiesModule } from './properties/properties.module';
 import { ReservationsModule } from './reservations/reservations.module';
 import { ReviewsModule } from './reviews/reviews.module';
+import { ChatbotModule } from './chatbot/chatbot.module';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
   imports: [
@@ -18,6 +20,8 @@ import { ReviewsModule } from './reviews/reviews.module';
     PropertiesModule,
     ReservationsModule,
     ReviewsModule,
+    ChatbotModule,
+    UploadModule,
   ],
   controllers: [AppController],
   providers: [AppService],

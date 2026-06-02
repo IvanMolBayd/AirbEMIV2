@@ -4,7 +4,12 @@ export declare class PropertiesController {
     private readonly propertiesService;
     constructor(propertiesService: PropertiesService);
     create(createPropertyDto: CreatePropertyDto, req: any): Promise<import("./schemas/property.schema").PropertyDocument>;
+    uploadImage(file: Express.Multer.File): {
+        url: string;
+        filename: any;
+    };
     findMyListings(req: any): Promise<import("./schemas/property.schema").PropertyDocument[]>;
+    getStats(req: any): Promise<any>;
     remove(id: string, req: any): Promise<{
         deleted: boolean;
     }>;

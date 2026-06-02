@@ -1,18 +1,22 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './navbar.component.html'
 })
 export class NavbarComponent {
+  private router = inject(Router);
   public authService = inject(AuthService);
   isSearchOpen = false;
   searchCity = '';
+  searchTitle = '';
+  searchGuests: number | null = null;
 
   logout() {
     this.authService.logout();
@@ -24,6 +28,15 @@ export class NavbarComponent {
 
   closeSearch() {
     this.isSearchOpen = false;
-    this.searchCity = '';
+  }
+
+  onSearch() {
+    const queryParams: any = {};
+    if (this.searchCity) queryParams.city = this.searchCity;
+    if (this.searchTitle) queryParams.title = this.searchTitle;
+    if (this.searchGuests) queryParams.guests = this.searchGuests;
+
+    this.router.navigate(['/'], { queryParams });
+    this.isSearchOpen = false;
   }
 }

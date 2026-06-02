@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface Property {
@@ -14,6 +14,11 @@ export interface Property {
   };
   amenities: string[];
   isActive: boolean;
+  images?: string[];
+  location?: {
+    type: string;
+    coordinates: number[];
+  };
   imageUrl?: string;
   rating?: number;
 }
@@ -25,8 +30,18 @@ export class PropertyService {
   private http = inject(HttpClient);
   private apiUrl = 'http://localhost:3000/properties';
 
-  getProperties(): Observable<Property[]> {
-    return this.http.get<Property[]>(this.apiUrl);
+  getProperties(city?: string, guests?: number, title?: string): Observable<Property[]> {
+    let params = new HttpParams();
+    if (city) {
+      params = params.set('city', city);
+    }
+    if (guests) {
+      params = params.set('guests', guests.toString());
+    }
+    if (title) {
+      params = params.set('title', title);
+    }
+    return this.http.get<Property[]>(this.apiUrl, { params });
   }
 
   getProperty(id: string): Observable<Property> {

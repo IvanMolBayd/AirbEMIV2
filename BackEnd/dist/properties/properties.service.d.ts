@@ -11,4 +11,5 @@ export declare class PropertiesService {
     remove(id: string, hostId: string): Promise<{
         deleted: boolean;
     }>;
+    getStats(hostId: string): Promise<any>;
 }

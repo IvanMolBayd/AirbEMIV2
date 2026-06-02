@@ -37,9 +37,27 @@ export class AuthService {
   }
 
   getUser(): any {
-    const u = localStorage.getItem(this.USER_KEY);
-    if (!u) return null;
-    try { return JSON.parse(u); } catch { return null; }
+    const token = this.getToken();
+    if (!token) return null;
+    try {
+      const payloadBase64 = token.split('.')[1];
+      if (!payloadBase64) return null;
+      // atob décode du base64 (remplacer les caractères URL-safe si nécessaire)
+      const base64 = payloadBase64.replace(/-/g, '+').replace(/_/g, '/');
+      const payloadStr = decodeURIComponent(atob(base64).split('').map(function(c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      const payload = JSON.parse(payloadStr);
+      return { 
+        id: payload.sub, 
+        email: payload.email, 
+        firstName: payload.firstName, 
+        lastName: payload.lastName,
+        role: payload.role 
+      };
+    } catch { 
+      return null; 
+    }
   }
 
   isAuthenticated(): boolean {

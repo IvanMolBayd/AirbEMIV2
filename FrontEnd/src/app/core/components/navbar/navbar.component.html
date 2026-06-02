@@ -12,36 +12,16 @@
 
       <!-- Barre de recherche centrale -->
       <div class="flex-1 max-w-xl hidden md:flex relative">
-        <button
-          (click)="toggleSearch()"
-          class="w-full flex items-center border border-gray-300 rounded-full shadow-sm hover:shadow-md transition-shadow px-1 py-1 text-left"
-        >
-          <span class="px-4 text-sm font-semibold text-gray-800 border-r border-gray-200 shrink-0">Où allez-vous&nbsp;?</span>
-          <span class="px-4 text-sm text-gray-400 border-r border-gray-200 shrink-0">N'importe quand</span>
-          <span class="px-4 text-sm text-gray-400 flex-1">Voyageurs</span>
-          <span class="bg-brand rounded-full p-2 flex-shrink-0">
+        <form (ngSubmit)="onSearch()" class="w-full flex items-center border border-gray-300 rounded-full shadow-sm hover:shadow-md transition-shadow px-1 py-1 bg-white">
+          <input type="text" name="city" [(ngModel)]="searchCity" placeholder="Où allez-vous ?" class="px-4 py-2 w-1/3 text-sm font-semibold text-gray-800 border-r border-gray-200 focus:outline-none bg-transparent rounded-l-full placeholder-gray-500">
+          <input type="text" name="title" [(ngModel)]="searchTitle" placeholder="Nom du logement" class="px-4 py-2 w-1/3 text-sm text-gray-800 border-r border-gray-200 focus:outline-none bg-transparent placeholder-gray-400">
+          <input type="number" name="guests" [(ngModel)]="searchGuests" placeholder="Voyageurs" min="1" class="px-4 py-2 w-1/3 text-sm text-gray-800 focus:outline-none bg-transparent placeholder-gray-400">
+          <button type="submit" class="bg-brand rounded-full p-2 ml-1 flex-shrink-0 hover:bg-rose-600 transition cursor-pointer">
             <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
             </svg>
-          </span>
-        </button>
-
-        <!-- Dropdown recherche -->
-        <div *ngIf="isSearchOpen"
-          class="absolute top-full mt-3 left-0 right-0 bg-white rounded-2xl shadow-2xl border border-gray-100 p-6 z-50">
-          <p class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">Destinations populaires</p>
-          <div class="grid grid-cols-3 gap-2 mb-4">
-            <button *ngFor="let city of ['Marrakech', 'Agadir', 'Casablanca', 'Fès', 'Chefchaouen', 'Essaouira']"
-              (click)="closeSearch()"
-              routerLink="/"
-              class="flex items-center gap-2 border border-gray-200 rounded-xl p-3 hover:border-gray-400 hover:bg-gray-50 transition text-left"
-            >
-              <span class="text-xl">🇲🇦</span>
-              <span class="text-sm font-medium text-gray-700">{{ city }}</span>
-            </button>
-          </div>
-          <button (click)="closeSearch()" class="text-sm text-gray-500 hover:text-gray-700 underline">Fermer</button>
-        </div>
+          </button>
+        </form>
       </div>
 
       <!-- Overlay fermeture dropdown -->
@@ -58,6 +38,13 @@
           <a routerLink="/create-property"
             class="text-sm font-semibold text-gray-700 hover:underline transition px-3 py-2 hidden lg:block whitespace-nowrap">
             + Créer une annonce
+          </a>
+          <a routerLink="/reservations"
+            class="text-sm font-semibold text-gray-700 hover:text-brand transition px-3 py-2 hidden lg:flex items-center gap-1.5 whitespace-nowrap">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+            Réservations
           </a>
           <!-- Avatar cliquable → Dashboard -->
           <a routerLink="/dashboard"

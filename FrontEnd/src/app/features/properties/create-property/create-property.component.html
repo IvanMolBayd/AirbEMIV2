@@ -26,14 +26,11 @@
         <!-- Titre -->
         <div>
           <label for="title" class="block text-sm font-semibold text-gray-700 mb-1">Titre de l'annonce</label>
-          <input
-            id="title"
-            type="text"
-            formControlName="title"
+          <input id="title" type="text" formControlName="title"
             placeholder="Ex: Bel appartement lumineux avec vue sur mer"
-            class="w-full px-4 py-3 border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition"
-          >
-          <p *ngIf="propertyForm.get('title')?.invalid && propertyForm.get('title')?.touched" class="mt-1 text-xs text-red-500">
+            class="w-full px-4 py-3 border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition">
+          <p *ngIf="propertyForm.get('title')?.invalid && propertyForm.get('title')?.touched"
+            class="mt-1 text-xs text-red-500">
             Le titre doit contenir au moins 5 caractères.
           </p>
         </div>
@@ -41,14 +38,11 @@
         <!-- Description -->
         <div>
           <label for="description" class="block text-sm font-semibold text-gray-700 mb-1">Description</label>
-          <textarea
-            id="description"
-            formControlName="description"
-            rows="4"
+          <textarea id="description" formControlName="description" rows="4"
             placeholder="Décrivez votre logement, ses atouts, les équipements disponibles..."
-            class="w-full px-4 py-3 border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition resize-none"
-          ></textarea>
-          <p *ngIf="propertyForm.get('description')?.invalid && propertyForm.get('description')?.touched" class="mt-1 text-xs text-red-500">
+            class="w-full px-4 py-3 border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition resize-none"></textarea>
+          <p *ngIf="propertyForm.get('description')?.invalid && propertyForm.get('description')?.touched"
+            class="mt-1 text-xs text-red-500">
             La description doit contenir au moins 20 caractères.
           </p>
         </div>
@@ -56,38 +50,32 @@
         <!-- Prix & Capacité -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label for="pricePerNight" class="block text-sm font-semibold text-gray-700 mb-1">Prix par nuit (€)</label>
+            <label for="pricePerNight" class="block text-sm font-semibold text-gray-700 mb-1">Prix par nuit
+              (MAD)</label>
             <div class="relative">
-              <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-medium">€</span>
-              <input
-                id="pricePerNight"
-                type="number"
-                formControlName="pricePerNight"
-                placeholder="75"
-                min="1"
-                class="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition"
-              >
+              <span class="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 font-medium">DH</span>
+              <input id="pricePerNight" type="number" formControlName="pricePerNight" placeholder="75" min="1"
+                class="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition">
             </div>
-            <p *ngIf="propertyForm.get('pricePerNight')?.invalid && propertyForm.get('pricePerNight')?.touched" class="mt-1 text-xs text-red-500">
+            <p *ngIf="propertyForm.get('pricePerNight')?.invalid && propertyForm.get('pricePerNight')?.touched"
+              class="mt-1 text-xs text-red-500">
               Veuillez entrer un prix valide.
             </p>
           </div>
           <div>
-            <label for="maxGuests" class="block text-sm font-semibold text-gray-700 mb-1">Nombre de voyageurs max.</label>
+            <label for="maxGuests" class="block text-sm font-semibold text-gray-700 mb-1">Nombre de voyageurs
+              max.</label>
             <div class="relative">
-              <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+              <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none"
+                stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
-              <input
-                id="maxGuests"
-                type="number"
-                formControlName="maxGuests"
-                placeholder="4"
-                min="1"
-                class="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition"
-              >
+              <input id="maxGuests" type="number" formControlName="maxGuests" placeholder="4" min="1"
+                class="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition">
             </div>
-            <p *ngIf="propertyForm.get('maxGuests')?.invalid && propertyForm.get('maxGuests')?.touched" class="mt-1 text-xs text-red-500">
+            <p *ngIf="propertyForm.get('maxGuests')?.invalid && propertyForm.get('maxGuests')?.touched"
+              class="mt-1 text-xs text-red-500">
               Veuillez entrer un nombre de voyageurs valide.
             </p>
           </div>
@@ -99,41 +87,126 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label for="city" class="block text-xs text-gray-500 mb-1">Ville</label>
-              <input
-                id="city"
-                type="text"
-                formControlName="city"
-                placeholder="Paris"
-                class="w-full px-4 py-3 border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition"
-              >
-              <p *ngIf="propertyForm.get('city')?.invalid && propertyForm.get('city')?.touched" class="mt-1 text-xs text-red-500">Champ requis.</p>
+              <select id="city" formControlName="city"
+                class="w-full px-4 py-3 border border-gray-300 rounded-xl text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition">
+                <option value="" disabled selected>Sélectionnez une ville</option>
+                <option value="Agadir">Agadir</option>
+                <option value="Casablanca">Casablanca</option>
+                <option value="Chefchaouen">Chefchaouen</option>
+                <option value="Essaouira">Essaouira</option>
+                <option value="Fès">Fès</option>
+                <option value="Marrakech">Marrakech</option>
+                <option value="Ouarzazate">Ouarzazate</option>
+                <option value="Rabat">Rabat</option>
+                <option value="Tanger">Tanger</option>
+                <option value="Vallée de l'Ourika">Vallée de l'Ourika</option>
+              </select>
+              <p *ngIf="propertyForm.get('city')?.invalid && propertyForm.get('city')?.touched"
+                class="mt-1 text-xs text-red-500">Champ requis.</p>
             </div>
             <div>
               <label for="country" class="block text-xs text-gray-500 mb-1">Pays</label>
-              <input
-                id="country"
-                type="text"
-                formControlName="country"
-                placeholder="France"
-                class="w-full px-4 py-3 border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition"
-              >
-              <p *ngIf="propertyForm.get('country')?.invalid && propertyForm.get('country')?.touched" class="mt-1 text-xs text-red-500">Champ requis.</p>
+              <select id="country" formControlName="country"
+                class="w-full px-4 py-3 border border-gray-300 rounded-xl text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition">
+                <option value="Maroc" selected>Maroc</option>
+              </select>
+              <p *ngIf="propertyForm.get('country')?.invalid && propertyForm.get('country')?.touched"
+                class="mt-1 text-xs text-red-500">Champ requis.</p>
             </div>
+          </div>
+          <!-- CARTE LEAFLET -->
+          <div class="mt-4">
+            <label class="block text-xs text-gray-500 mb-2">Cliquez sur la carte pour définir l'emplacement précis
+              :</label>
+            <div id="map" class="w-full h-64 rounded-xl border border-gray-300 z-0 relative"></div>
+            <p *ngIf="!selectedLocation" class="mt-1 text-xs text-amber-500">⚠️ Aucun point sélectionné, les coordonnées
+              par défaut seront utilisées.</p>
+            <p *ngIf="selectedLocation" class="mt-1 text-xs text-green-600">✅ Emplacement sélectionné avec succès !</p>
+          </div>
+        </div>
+
+        <!-- Images Upload -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Photos du logement</label>
+
+          <!-- Grille de prévisualisation -->
+          <div *ngIf="imagePreviewUrls.length > 0" class="grid grid-cols-3 gap-3 mb-3">
+            <div *ngFor="let preview of imagePreviewUrls; let i = index" class="relative group">
+              <img [src]="preview" class="w-full h-24 object-cover rounded-xl border border-gray-200">
+              <button type="button" (click)="removeImage(i)"
+                class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition">✕</button>
+            </div>
+            <!-- Spinner si upload en cours -->
+            <div *ngIf="isUploadingImage()"
+              class="w-full h-24 rounded-xl border-2 border-dashed border-brand flex items-center justify-center">
+              <svg class="animate-spin h-6 w-6 text-brand" xmlns="http://www.w3.org/2000/svg" fill="none"
+                viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Zone d'upload -->
+          <label for="fileInput"
+            class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:border-brand hover:bg-rose-50 transition">
+            <svg class="w-8 h-8 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <span class="text-sm text-gray-500">Cliquer pour ajouter une photo</span>
+            <span class="text-xs text-gray-400 mt-1">JPG, PNG, GIF, WebP — max 10MB</span>
+            <input id="fileInput" type="file" class="hidden" accept="image/*" (change)="onFileSelected($event)">
+          </label>
+        </div>
+
+        <!-- Équipements -->
+        <div formGroupName="amenities">
+          <label class="block text-sm font-semibold text-gray-700 mb-3">Équipements inclus</label>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            <label class="flex items-center space-x-3 cursor-pointer">
+              <input type="checkbox" formControlName="wifi"
+                class="form-checkbox h-5 w-5 text-brand rounded focus:ring-brand">
+              <span class="text-sm text-gray-700">Wi-Fi</span>
+            </label>
+            <label class="flex items-center space-x-3 cursor-pointer">
+              <input type="checkbox" formControlName="piscine"
+                class="form-checkbox h-5 w-5 text-brand rounded focus:ring-brand">
+              <span class="text-sm text-gray-700">Piscine</span>
+            </label>
+            <label class="flex items-center space-x-3 cursor-pointer">
+              <input type="checkbox" formControlName="parking"
+                class="form-checkbox h-5 w-5 text-brand rounded focus:ring-brand">
+              <span class="text-sm text-gray-700">Parking</span>
+            </label>
+            <label class="flex items-center space-x-3 cursor-pointer">
+              <input type="checkbox" formControlName="climatisation"
+                class="form-checkbox h-5 w-5 text-brand rounded focus:ring-brand">
+              <span class="text-sm text-gray-700">Climatisation</span>
+            </label>
+            <label class="flex items-center space-x-3 cursor-pointer">
+              <input type="checkbox" formControlName="cuisine"
+                class="form-checkbox h-5 w-5 text-brand rounded focus:ring-brand">
+              <span class="text-sm text-gray-700">Cuisine</span>
+            </label>
+            <label class="flex items-center space-x-3 cursor-pointer">
+              <input type="checkbox" formControlName="tv"
+                class="form-checkbox h-5 w-5 text-brand rounded focus:ring-brand">
+              <span class="text-sm text-gray-700">Télévision</span>
+            </label>
           </div>
         </div>
 
         <!-- Submit -->
         <div class="pt-2">
-          <button
-            type="submit"
-            [disabled]="propertyForm.invalid || isLoading"
-            class="w-full flex justify-center items-center gap-2 py-3 px-6 bg-brand text-white font-semibold rounded-xl hover:bg-rose-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand disabled:opacity-50 disabled:cursor-not-allowed transition duration-150 ease-in-out"
-          >
-            <svg *ngIf="isLoading" class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <button type="submit" [disabled]="propertyForm.invalid || isLoading()"
+            class="w-full flex justify-center items-center gap-2 py-3 px-6 bg-brand text-white font-semibold rounded-xl hover:bg-rose-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand disabled:opacity-50 disabled:cursor-not-allowed transition duration-150 ease-in-out">
+            <svg *ngIf="isLoading()" class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg"
+              fill="none" viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
             </svg>
-            {{ isLoading ? 'Publication en cours...' : 'Publier mon annonce' }}
+            {{ isLoading() ? 'Publication en cours...' : 'Publier mon annonce' }}
           </button>
         </div>
 

@@ -11,9 +11,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var _a, _b;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PropertiesController = void 0;
 const common_1 = require("@nestjs/common");
+const platform_express_1 = require("@nestjs/platform-express");
+const multer_1 = require("multer");
+const path_1 = require("path");
 const properties_service_1 = require("./properties.service");
 const create_property_dto_1 = require("./dto/create-property.dto");
 const jwt_auth_guard_1 = require("../auth/guards/jwt-auth.guard");
@@ -26,8 +30,17 @@ let PropertiesController = class PropertiesController {
         const hostId = req.user.userId;
         return this.propertiesService.create(createPropertyDto, hostId);
     }
+    uploadImage(file) {
+        if (!file)
+            throw new common_1.BadRequestException('Aucun fichier reçu.');
+        const url = `http://localhost:3000/uploads/${file.filename}`;
+        return { url, filename: file.filename };
+    }
     findMyListings(req) {
         return this.propertiesService.findByHost(req.user.userId);
+    }
+    getStats(req) {
+        return this.propertiesService.getStats(req.user.userId);
     }
     remove(id, req) {
         return this.propertiesService.remove(id, req.user.userId);
@@ -50,6 +63,31 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], PropertiesController.prototype, "create", null);
 __decorate([
+    (0, common_1.Post)('upload'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file', {
+        storage: (0, multer_1.diskStorage)({
+            destination: './uploads',
+            filename: (req, file, cb) => {
+                const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+                cb(null, uniqueSuffix + (0, path_1.extname)(file.originalname));
+            },
+        }),
+        fileFilter: (req, file, cb) => {
+            const allowed = /\.(jpg|jpeg|png|gif|webp)$/i;
+            if (!allowed.test((0, path_1.extname)(file.originalname))) {
+                return cb(new common_1.BadRequestException('Seules les images JPG, PNG, GIF et WebP sont autorisées.'), false);
+            }
+            cb(null, true);
+        },
+        limits: { fileSize: 10 * 1024 * 1024 },
+    })),
+    __param(0, (0, common_1.UploadedFile)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [typeof (_b = typeof Express !== "undefined" && (_a = Express.Multer) !== void 0 && _a.File) === "function" ? _b : Object]),
+    __metadata("design:returntype", void 0)
+], PropertiesController.prototype, "uploadImage", null);
+__decorate([
     (0, common_1.Get)('my-listings'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     __param(0, (0, common_1.Request)()),
@@ -57,6 +95,14 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], PropertiesController.prototype, "findMyListings", null);
+__decorate([
+    (0, common_1.Get)('stats'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    __param(0, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], PropertiesController.prototype, "getStats", null);
 __decorate([
     (0, common_1.Delete)(':id'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),

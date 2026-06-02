@@ -45,6 +45,11 @@ export class CreatePropertyDto {
   @IsArray()
   @IsOptional()
   @IsString({ each: true })
+  images?: string[];
+
+  @IsArray()
+  @IsOptional()
+  @IsString({ each: true })
   amenities?: string[];
 
   @IsBoolean()

@@ -45,7 +45,7 @@ export class UserService {
     return this.http.post(`${this.BASE}/reservations`, data);
   }
 
-  createReview(data: { propertyId: string; rating: number; comment: string }): Observable<any> {
+  createReview(data: { propertyId: string; reservationId: string; rating: number; comment: string }): Observable<any> {
     return this.http.post(`${this.BASE}/reviews`, data);
   }
 

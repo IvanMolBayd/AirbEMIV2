@@ -41,6 +41,7 @@ class CreatePropertyDto {
     maxGuests;
     location;
     address;
+    images;
     amenities;
     isActive;
 }
@@ -75,6 +76,12 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", AddressDto)
 ], CreatePropertyDto.prototype, "address", void 0);
+__decorate([
+    (0, class_validator_1.IsArray)(),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)({ each: true }),
+    __metadata("design:type", Array)
+], CreatePropertyDto.prototype, "images", void 0);
 __decorate([
     (0, class_validator_1.IsArray)(),
     (0, class_validator_1.IsOptional)(),

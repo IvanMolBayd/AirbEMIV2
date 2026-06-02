@@ -12,6 +12,7 @@ export declare class CreatePropertyDto {
     maxGuests: number;
     location?: LocationDto;
     address: AddressDto;
+    images?: string[];
     amenities?: string[];
     isActive?: boolean;
 }

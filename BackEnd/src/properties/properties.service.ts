@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { Property, PropertyDocument } from './schemas/property.schema';
 import { CreatePropertyDto } from './dto/create-property.dto';
 
@@ -26,6 +26,16 @@ export class PropertiesService {
       filter['address.city'] = { $regex: new RegExp(query.city, 'i') };
     }
 
+    // Filtre par texte (recherche globale full-text)
+    if (query.title) {
+      filter['$text'] = { $search: query.title };
+    }
+
+    // Filtre par nombre de voyageurs
+    if (query.guests) {
+      filter['maxGuests'] = { $gte: parseInt(query.guests, 10) };
+    }
+
     // Filtre par coordonnées géospatiales (near)
     if (query.lng && query.lat && query.maxDistance) {
       filter.location = {
@@ -39,7 +49,14 @@ export class PropertiesService {
       };
     }
 
-    return this.propertyModel.find(filter).exec();
+    const queryObj = this.propertyModel.find(filter);
+    
+    // Si recherche texte, trier par pertinence (score)
+    if (query.title) {
+      queryObj.sort({ score: { $meta: 'textScore' } });
+    }
+    
+    return queryObj.exec();
   }
 
   async findOne(id: string): Promise<PropertyDocument> {
@@ -49,7 +66,7 @@ export class PropertiesService {
   }
 
   async findByHost(hostId: string): Promise<PropertyDocument[]> {
-    return this.propertyModel.find({ hostId }).exec();
+    return this.propertyModel.find({ hostId: new mongoose.Types.ObjectId(hostId) }).exec();
   }
 
   async remove(id: string, hostId: string): Promise<{ deleted: boolean }> {
@@ -59,5 +76,45 @@ export class PropertiesService {
     }
     await this.propertyModel.findByIdAndDelete(id).exec();
     return { deleted: true };
+  }
+
+  // EXPERT MONGODB: Aggregation Pipeline Complexe
+  async getStats(hostId: string): Promise<any> {
+    return this.propertyModel.aggregate([
+      // 1. Filtrer les annonces de cet hôte
+      { $match: { hostId: new mongoose.Types.ObjectId(hostId) } },
+      
+      // 2. Joindre la collection reviews pour obtenir les avis sur ces annonces
+      {
+        $lookup: {
+          from: 'reviews', // Nom de la collection MongoDB
+          localField: '_id',
+          foreignField: 'propertyId',
+          as: 'reviews'
+        }
+      },
+      
+      // 3. Calculer des statistiques par annonce
+      {
+        $project: {
+          title: 1,
+          pricePerNight: 1,
+          reviewsCount: { $size: '$reviews' },
+          averageRating: { $avg: '$reviews.rating' }
+        }
+      },
+      
+      // 4. Regrouper pour avoir les statistiques globales de l'hôte
+      {
+        $group: {
+          _id: null,
+          totalProperties: { $sum: 1 },
+          averagePricePerNight: { $avg: '$pricePerNight' },
+          totalReviews: { $sum: '$reviewsCount' },
+          globalAverageRating: { $avg: '$averageRating' },
+          propertiesStats: { $push: { title: '$title', rating: '$averageRating', reviews: '$reviewsCount' } }
+        }
+      }
+    ]);
   }
 }

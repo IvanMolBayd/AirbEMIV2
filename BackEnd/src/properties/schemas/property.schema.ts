@@ -50,6 +50,9 @@ export class Property {
   };
 
   @Prop({ type: [String], default: [] })
+  images: string[];
+
+  @Prop({ type: [String], default: [] })
   amenities: string[];
 
   @Prop({ required: true, default: true })
@@ -58,3 +61,4 @@ export class Property {
 
 export const PropertySchema = SchemaFactory.createForClass(Property);
 PropertySchema.index({ location: '2dsphere' }); // Index Geospatial
+PropertySchema.index({ title: 'text', description: 'text' }); // Index Full-Text

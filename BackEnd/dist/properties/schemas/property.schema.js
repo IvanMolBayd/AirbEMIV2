@@ -23,6 +23,7 @@ let Property = class Property {
     maxGuests;
     location;
     address;
+    images;
     amenities;
     isActive;
 };
@@ -75,6 +76,10 @@ __decorate([
 __decorate([
     (0, mongoose_1.Prop)({ type: [String], default: [] }),
     __metadata("design:type", Array)
+], Property.prototype, "images", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ type: [String], default: [] }),
+    __metadata("design:type", Array)
 ], Property.prototype, "amenities", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ required: true, default: true }),
@@ -85,4 +90,5 @@ exports.Property = Property = __decorate([
 ], Property);
 exports.PropertySchema = mongoose_1.SchemaFactory.createForClass(Property);
 exports.PropertySchema.index({ location: '2dsphere' });
+exports.PropertySchema.index({ title: 'text', description: 'text' });
 //# sourceMappingURL=property.schema.js.map

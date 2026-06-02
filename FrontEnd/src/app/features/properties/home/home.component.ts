@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { PropertyService, Property } from '../../../core/services/property.service';
 
 const CATEGORIES = [
@@ -23,6 +23,7 @@ const CATEGORIES = [
 export class HomeComponent implements OnInit {
   private propertyService = inject(PropertyService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   // ✅ allProperties EST un signal → computed() réagit correctement
   allProperties = signal<Property[]>([]);
@@ -50,9 +51,19 @@ export class HomeComponent implements OnInit {
   });
 
   ngOnInit() {
-    this.propertyService.getProperties().subscribe({
+    this.route.queryParams.subscribe(params => {
+      const city = params['city'];
+      const guests = params['guests'] ? parseInt(params['guests'], 10) : undefined;
+      const title = params['title'];
+      this.loadProperties(city, guests, title);
+    });
+  }
+
+  loadProperties(city?: string, guests?: number, title?: string) {
+    this.isLoading.set(true);
+    this.propertyService.getProperties(city, guests, title).subscribe({
       next: (data) => {
-        this.allProperties.set(data);  // ✅ signal.set() → déclenche computed
+        this.allProperties.set(data);
         this.isLoading.set(false);
       },
       error: (err) => {
