@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Model } from 'mongoose';
+import { Model } from 'mongoose';
 import { Review, ReviewDocument } from './schemas/review.schema';
 import { CreateReviewDto } from './dto/create-review.dto';
 
@@ -21,6 +21,6 @@ export class ReviewsService {
   }
 
   async findByReviewer(reviewerId: string): Promise<ReviewDocument[]> {
-    return this.reviewModel.find({ reviewerId: new mongoose.Types.ObjectId(reviewerId) }).populate('propertyId', 'title address imageUrl').exec();
+    return this.reviewModel.find({ reviewerId } as any).populate('propertyId', 'title address imageUrl').exec();
   }
 }

@@ -66,7 +66,7 @@ export class PropertiesService {
   }
 
   async findByHost(hostId: string): Promise<PropertyDocument[]> {
-    return this.propertyModel.find({ hostId: new mongoose.Types.ObjectId(hostId) }).exec();
+    return this.propertyModel.find({ hostId } as any).exec();
   }
 
   async remove(id: string, hostId: string): Promise<{ deleted: boolean }> {

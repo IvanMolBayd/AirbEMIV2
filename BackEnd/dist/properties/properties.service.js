@@ -97,7 +97,7 @@ let PropertiesService = class PropertiesService {
         return property;
     }
     async findByHost(hostId) {
-        return this.propertyModel.find({ hostId: new mongoose_2.default.Types.ObjectId(hostId) }).exec();
+        return this.propertyModel.find({ hostId }).exec();
     }
     async remove(id, hostId) {
         const property = await this.findOne(id);

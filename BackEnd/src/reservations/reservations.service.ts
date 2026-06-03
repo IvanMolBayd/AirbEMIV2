@@ -1,6 +1,6 @@
-import { ConflictException, Injectable, NotFoundException, OnModuleInit } from '@nestjs/common';
+import { ConflictException, Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Model } from 'mongoose';
+import { Model } from 'mongoose';
 import { Reservation, ReservationDocument } from './schemas/reservation.schema';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { PropertiesService } from '../properties/properties.service';
@@ -22,7 +22,6 @@ export class ReservationsService implements OnModuleInit {
           console.log(`\n[MONGODB CHANGE STREAM] 🛎️ Nouvelle réservation confirmée en temps réel !`);
           console.log(`-> Logement ID: ${doc?.propertyId}`);
           console.log(`-> Voyageur ID: ${doc?.guestId}\n`);
-          // En production, on émettrait un événement WebSocket vers l'hôte ici.
         }
       });
     } catch (err) {
@@ -44,26 +43,25 @@ export class ReservationsService implements OnModuleInit {
     }
 
     // 2. Vérifier la disponibilité (chevauchement de dates) — bloque pending ET confirmed
-    const propertyObjectId = new mongoose.Types.ObjectId(propertyId);
+    // On utilise `as any` pour contourner la restriction TypeScript stricte de Mongoose 9
     const overlappingReservation = await this.reservationModel.findOne({
-      propertyId: propertyObjectId,
+      propertyId: propertyId,
       status: { $in: ['confirmed', 'pending'] },
       checkInDate: { $lt: checkOut },
       checkOutDate: { $gt: checkIn },
-    }).exec();
+    } as any).exec();
 
     if (overlappingReservation) {
       const fmt = (d: Date) => d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' });
       throw new ConflictException(
-        `Ce logement est déjà réservé du ${fmt(new Date(overlappingReservation.checkInDate as any))} au ${fmt(new Date(overlappingReservation.checkOutDate as any))}. Veuillez choisir d’autres dates.`
+        `Ce logement est déjà réservé du ${fmt(new Date(overlappingReservation.checkInDate as any))} au ${fmt(new Date(overlappingReservation.checkOutDate as any))}. Veuillez choisir d'autres dates.`
       );
     }
 
     // 3. Créer la réservation
     const newReservation = new this.reservationModel({
       ...createReservationDto,
-      guestId: new mongoose.Types.ObjectId(guestId),
-      propertyId: propertyObjectId,
+      guestId,
       checkInDate: checkIn,
       checkOutDate: checkOut,
     });
@@ -71,6 +69,6 @@ export class ReservationsService implements OnModuleInit {
   }
 
   async findMyTrips(guestId: string): Promise<ReservationDocument[]> {
-    return this.reservationModel.find({ guestId: new mongoose.Types.ObjectId(guestId) }).populate('propertyId').exec();
+    return this.reservationModel.find({ guestId } as any).populate('propertyId').exec();
   }
 }

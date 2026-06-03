@@ -6,7 +6,7 @@ export declare class PropertiesController {
     create(createPropertyDto: CreatePropertyDto, req: any): Promise<import("./schemas/property.schema").PropertyDocument>;
     uploadImage(file: Express.Multer.File): {
         url: string;
-        filename: any;
+        filename: string;
     };
     findMyListings(req: any): Promise<import("./schemas/property.schema").PropertyDocument[]>;
     getStats(req: any): Promise<any>;

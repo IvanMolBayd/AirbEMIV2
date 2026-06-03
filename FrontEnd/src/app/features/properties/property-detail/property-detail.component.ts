@@ -87,7 +87,7 @@ export class PropertyDetailComponent implements OnInit {
         this.property.set(data);
         this.loadReviews(id);
         this.checkIfBooked(id);
-        
+
         // Charger l'état favori
         const favs = JSON.parse(localStorage.getItem('airbemi_favs') || '[]');
         this.isFavorite.set(favs.includes(id));
@@ -115,7 +115,6 @@ export class PropertyDetailComponent implements OnInit {
   checkIfBooked(propertyId: string) {
     if (!this.authService.isAuthenticated()) return;
     this.userService.getMyTrips().subscribe(trips => {
-      // Check si l'utilisateur a un voyage pour cette propriété
       const trip = trips.find(t => t.propertyId && (t.propertyId._id === propertyId || (t.propertyId as any) === propertyId));
       if (trip) {
         this.hasBooked.set(true);
@@ -176,7 +175,7 @@ export class PropertyDetailComponent implements OnInit {
       favs = favs.filter((id: string) => id !== propId);
     } else {
       favs.push(propId);
-      confetti({ particleCount: 50, spread: 40, origin: { y: 0.8 } }); // Petit effet WOW
+      confetti({ particleCount: 50, spread: 40, origin: { y: 0.8 } });
     }
     localStorage.setItem('airbemi_favs', JSON.stringify(favs));
     this.isFavorite.set(!this.isFavorite());
@@ -191,7 +190,6 @@ export class PropertyDetailComponent implements OnInit {
         url: window.location.href,
       }).catch(console.error);
     } else {
-      // Fallback
       navigator.clipboard.writeText(window.location.href);
       alert('Lien copié dans le presse-papier !');
     }
@@ -212,7 +210,7 @@ export class PropertyDetailComponent implements OnInit {
     }
 
     if (!this.canReserve) {
-      this.bookingError.set('Veuillez sélectionner des dates d’arrivée et de départ valides.');
+      this.bookingError.set("Veuillez sélectionner des dates d'arrivée et de départ valides.");
       return;
     }
 
@@ -231,11 +229,12 @@ export class PropertyDetailComponent implements OnInit {
         confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
         this.hasBooked.set(true);
         alert(`🎉 Réservation confirmée ! Du ${this.checkInDate()} au ${this.checkOutDate()} — Total: ${this.formatPrice(this.total)} DH`);
-        // Re-check la réservation pour activer le formulaire d'avis
         this.checkIfBooked(prop._id);
       },
       error: (err) => {
-        this.bookingError.set(err?.error?.message || 'La réservation a échoué. Ces dates sont peut-être déjà réservées.');
+        // Afficher l'erreur du backend (conflit de dates, etc.)
+        const msg = err?.error?.message || "La réservation a échoué. Ces dates sont peut-être déjà réservées.";
+        this.bookingError.set(msg);
       }
     });
   }
