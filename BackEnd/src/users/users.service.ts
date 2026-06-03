@@ -1,11 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { Property } from '../properties/schemas/property.schema';
 import { User, UserDocument } from './schemas/user.schema';
+import { UserLike, UserLikeDocument } from './schemas/user-like.schema';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+  constructor(
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
+    @InjectModel(UserLike.name) private userLikeModel: Model<UserLikeDocument>,
+  ) {}
 
   // Chercher un utilisateur par email
   async findByEmail(email: string): Promise<UserDocument | null> {
@@ -21,6 +26,50 @@ export class UsersService {
   async create(userData: Partial<User>): Promise<UserDocument> {
     const newUser = new this.userModel(userData);
     return newUser.save();
+  }
+
+  async addLikedProperty(userId: string, propertyId: string): Promise<UserLikeDocument> {
+    const like = await this.userLikeModel
+      .findOneAndUpdate(
+        { userId, propertyId },
+        { $setOnInsert: { userId, propertyId } },
+        { upsert: true, new: true, setDefaultsOnInsert: true },
+      )
+      .exec();
+
+    if (!like) {
+      throw new NotFoundException('Unable to store like');
+    }
+
+    return like;
+  }
+
+  async removeLikedProperty(userId: string, propertyId: string): Promise<{ deleted: boolean }> {
+    const result = await this.userLikeModel
+      .deleteOne({ userId, propertyId })
+      .exec();
+
+    return { deleted: result.deletedCount > 0 };
+  }
+
+  async getLikedPropertyIds(userId: string): Promise<string[]> {
+    const likes = await this.userLikeModel
+      .find({ userId })
+      .select('propertyId')
+      .exec();
+
+    return likes.map((like) => like.propertyId.toString());
+  }
+
+  async getLikedProperties(userId: string): Promise<Property[]> {
+    const likes = await this.userLikeModel
+      .find({ userId })
+      .populate('propertyId')
+      .exec();
+
+    return likes
+      .map((like) => like.propertyId as unknown as Property)
+      .filter((property): property is Property => Boolean(property));
   }
 
   // Trouver ou créer un utilisateur via Google OAuth2

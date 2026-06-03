@@ -15,6 +15,7 @@ export declare class AuthService {
             lastName: any;
             role: any;
             isHost: any;
+            likedProperties: string[];
         };
     }>;
     register(registerDto: RegisterDto): Promise<any>;
@@ -27,6 +28,7 @@ export declare class AuthService {
             lastName: any;
             role: any;
             isHost: any;
+            likedProperties: string[];
         };
     }>;
 }

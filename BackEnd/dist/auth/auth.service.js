@@ -66,12 +66,14 @@ let AuthService = class AuthService {
         return null;
     }
     async login(user) {
+        const userId = user._id?.toString?.() ?? user._id;
+        const likedProperties = await this.usersService.getLikedPropertyIds(userId);
         const payload = {
             email: user.email,
-            sub: user._id,
+            sub: userId,
             role: user.role,
             firstName: user.firstName,
-            lastName: user.lastName
+            lastName: user.lastName,
         };
         return {
             access_token: this.jwtService.sign(payload),
@@ -81,7 +83,8 @@ let AuthService = class AuthService {
                 firstName: user.firstName,
                 lastName: user.lastName,
                 role: user.role,
-                isHost: user.isHost
+                isHost: user.isHost,
+                likedProperties,
             }
         };
     }
@@ -107,23 +110,7 @@ let AuthService = class AuthService {
         if (!req.user) {
             throw new common_1.UnauthorizedException('Aucun utilisateur provenant de Google');
         }
-        const { email, firstName, lastName, googleId } = req.user;
-        let user = await this.usersService.findByEmail(email);
-        if (!user) {
-            user = await this.usersService.create({
-                email,
-                firstName,
-                lastName,
-                googleId,
-                role: 'user',
-                isHost: false,
-            });
-        }
-        else if (!user.googleId) {
-            user.googleId = googleId;
-            await user.save();
-        }
-        return this.login(user);
+        return this.login(req.user);
     }
 };
 exports.AuthService = AuthService;

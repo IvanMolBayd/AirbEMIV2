@@ -14,6 +14,7 @@ export declare class AuthController {
             lastName: any;
             role: any;
             isHost: any;
+            likedProperties: string[];
         };
     }>;
     googleAuth(req: any): Promise<void>;

@@ -37,6 +37,18 @@ export class UserService {
     return this.http.get<Reservation[]>(`${this.BASE}/reservations/my-trips`);
   }
 
+  getMyLikes(): Observable<Property[]> {
+    return this.http.get<Property[]>(`${this.BASE}/users/me/likes`);
+  }
+
+  likeProperty(propertyId: string): Observable<any> {
+    return this.http.post(`${this.BASE}/users/me/likes/${propertyId}`, {});
+  }
+
+  unlikeProperty(propertyId: string): Observable<any> {
+    return this.http.delete(`${this.BASE}/users/me/likes/${propertyId}`);
+  }
+
   getMyReviews(): Observable<Review[]> {
     return this.http.get<Review[]>(`${this.BASE}/reviews/mine`);
   }

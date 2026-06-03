@@ -2,6 +2,8 @@ import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PropertyService, Property } from '../../../core/services/property.service';
+import { UserService } from '../../../core/services/user.service';
+import { AuthService } from '../../../core/auth/auth.service';
 
 const CATEGORIES = [
   { icon: '🏰', label: 'Riads', keywords: ['Riad', 'riad', 'Palais', 'dar', 'Dar'] },
@@ -22,6 +24,8 @@ const CATEGORIES = [
 })
 export class HomeComponent implements OnInit {
   private propertyService = inject(PropertyService);
+  private userService = inject(UserService);
+  private authService = inject(AuthService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
@@ -51,6 +55,8 @@ export class HomeComponent implements OnInit {
   });
 
   ngOnInit() {
+    this.loadFavorites();
+
     this.route.queryParams.subscribe(params => {
       const city = params['city'];
       const guests = params['guests'] ? parseInt(params['guests'], 10) : undefined;
@@ -77,9 +83,26 @@ export class HomeComponent implements OnInit {
   toggleFavorite(event: Event, id: string) {
     event.stopPropagation();
     event.preventDefault();
+    if (!this.authService.isAuthenticated()) {
+      return;
+    }
+
     const current = new Set(this.favorites());
-    if (current.has(id)) { current.delete(id); } else { current.add(id); }
+    const wasFavorite = current.has(id);
+    current.has(id) ? current.delete(id) : current.add(id);
     this.favorites.set(current);
+
+    const request$ = wasFavorite
+      ? this.userService.unlikeProperty(id)
+      : this.userService.likeProperty(id);
+
+    request$.subscribe({
+      error: () => {
+        const rollback = new Set(this.favorites());
+        wasFavorite ? rollback.add(id) : rollback.delete(id);
+        this.favorites.set(rollback);
+      }
+    });
   }
 
   isFavorite(id: string): boolean { return this.favorites().has(id); }
@@ -92,6 +115,21 @@ export class HomeComponent implements OnInit {
 
   formatPrice(price: number): string {
     return new Intl.NumberFormat('fr-MA').format(price);
+  }
+
+  private loadFavorites() {
+    if (!this.authService.isAuthenticated()) {
+      return;
+    }
+
+    this.userService.getMyLikes().subscribe({
+      next: (likes) => {
+        this.favorites.set(new Set(likes.map((like) => like._id)));
+      },
+      error: () => {
+        this.favorites.set(new Set());
+      }
+    });
   }
 
   get properties(): Property[] { return this.filteredProperties(); }
