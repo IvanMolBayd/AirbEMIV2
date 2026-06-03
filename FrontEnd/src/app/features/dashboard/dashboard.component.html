@@ -196,7 +196,7 @@
         <div *ngFor="let trip of trips"
           class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex items-center gap-5">
           <div class="w-20 h-20 rounded-xl overflow-hidden shrink-0 bg-gray-100">
-            <img [src]="trip.propertyId?.imageUrl || 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=200'"
+            <img [src]="(trip.propertyId?.images && trip.propertyId.images.length > 0) ? trip.propertyId.images[0] : (trip.propertyId?.imageUrl || 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=200')"
               class="w-full h-full object-cover">
           </div>
           <div class="flex-1 min-w-0">
